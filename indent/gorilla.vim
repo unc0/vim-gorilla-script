@@ -22,15 +22,18 @@ endif
 
 " Keywords to indent after
 let s:INDENT_AFTER_KEYWORD = '^\%(if\|unless\|else\|for\|while\|until\|'
-\                          . 'switch\|case\|default\|try\|catch\|finally\|'
+\                          . 'try\|catch\|finally\|'
 \                          . 'asyncif\|asyncfor\|asyncunless\|asyncuntil\|asyncwhile\|'
-\                          . 'class\|def\)\>'
+\                          . 'class\)\>'
 
 " Operators to indent after
 let s:INDENT_AFTER_OPERATOR = '\%([([{:=]\)$'
 
 " Keywords and operators that continue a line
-let s:CONTINUATION = '\%(,\|promise!\)$'
+let s:CONTINUATION = '\%(,\|promise!\|'
+\                  . 'let\s\+\%(mutable\)\?\I\i*\s*(.*)\|'
+\                  . '#\s*(.*)\|'
+\                  . 'case.\+\|default\)$'
 
 " Operators that block continuation indenting
 let s:CONTINUATION_BLOCK = '[([{:=]$'
@@ -263,21 +266,6 @@ function! GetGorillaIndent(curlinenum)
     return indent(matchlinenum)
   endif
 
-  " Try to find a matching when.
-  if curline =~ '^case\>' && !s:SmartSearch(prevlinenum, '\<switch\>')
-    let linenum = a:curlinenum
-
-    while linenum
-      let linenum = s:GetPrevNormalLine(linenum)
-
-      if getline(linenum) =~ '^case\>'
-        return indent(linenum)
-      endif
-    endwhile
-
-    return -1
-  endif
-
   " Indent based on the previous line.
   let prevline = s:GetTrimmedLine(prevlinenum)
   let previndent = indent(prevlinenum)
@@ -310,10 +298,6 @@ function! GetGorillaIndent(curlinenum)
   " Indent after these keywords and compound assignments if they aren't a
   " single line statement.
   if prevline =~ s:INDENT_AFTER_KEYWORD || prevline =~ s:COMPOUND_ASSIGNMENT
-    if !s:SmartSearch(prevlinenum, '\<then\>') && prevline !~ s:SINGLE_LINE_ELSE
-      return previndent + &shiftwidth
-    endif
-
     return -1
   endif
 
@@ -324,9 +308,7 @@ function! GetGorillaIndent(curlinenum)
 
   " Outdent after these keywords if they are a single-line statement.
   if prevline =~ s:OUTDENT_AFTER
-    if s:SmartSearch(prevlinenum, '\<then\>')
-      return previndent - &shiftwidth
-    endif
+    return previndent - &shiftwidth
   endif
 
   " If no indent or outdent is needed, keep the indent level of the previous
