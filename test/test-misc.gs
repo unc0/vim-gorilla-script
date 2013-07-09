@@ -215,3 +215,18 @@ let y = x() + x()
 // op2func
 let sq = (^ 2)
 let get-length = (.length)
+
+// cascades
+{1: x}
+(100+200)
+let arr = [1, 2, 3]
+  ..push 4
+
+macro operator unary +?
+  ASTE $node > 0
+
+macro get-foo(x, y, z)
+  let tmp = @tmp()
+  AST
+    let mutable $tmp = x+y+z
+    return $tmp

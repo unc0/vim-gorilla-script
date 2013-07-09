@@ -30,7 +30,9 @@ syn match   gorillaClassKeyword   /\s\+\<\zs\%\(def\|super\)\>/ display
 syn match   gorillaClassKeyword   /\%(get\|set\|property\|configurable\|writable\)\ze\%(\s*\S\+\)\?:/ display
 syn keyword gorillaSpecialKeyword require require! async async!
 syn keyword gorillaSpecialKeyword import export asyncif asyncfor asyncunless asyncuntil asyncwhile returnif returning returnunless
-syn keyword gorillaSpecialMacro   mutable macro const static extends
+syn keyword gorillaSpecialMacro   mutable const static extends
+syn keyword gorillaMacro          macro contained
+syn match   gorillaMacroKeyword   /macro\s\+\%(operator\s\+\%(unary\|binary\|assign\)\)\?/ display contains=gorillaMacro
 syn keyword gorillaKeyword        do end of ofall let enum namespace package
 syn keyword gorillaBoolean        true false
 syn keyword gorillaNull           null undefined void
@@ -71,7 +73,7 @@ syn match   gorillaExtendedOp    /:\%(\ze\s*\%(\S\+\)\|$\)/ display
 syn match   gorillaExtendedOp    /\I\i*\s*\zs\%(<<\|>>\)\ze\s*\I\i*/ display
 syn match   gorillaExtendedOp    /[^<>]\s*\zs\%(<<<\|>>>\)/ display
 " , ; ...
-syn match   gorillaSpecialOp     /[,;]\|\%(\.\.\.\ze\S\)/ display
+syn match   gorillaSpecialOp     /[,;]\|\%(\.\.\.\?\ze\S\)/ display
 " .
 syn match   gorillaSpecialOp     /\I\i*\zs!\?\.\ze\I\i*/ display
 " #-> #
@@ -111,19 +113,19 @@ syn cluster gorillaAllIdent contains=gorillaSpecialVar,gorillaObject,gorillaCons
 
 " Numbers {{{
 " A integer, including a leading plus or minus
-syn match   gorillaNumber /\%(\s\+\|^\|[+-]\)\d[0-9_]*\%([eE][+-]\?\d[0-9_]*\)\?\%(_\+\w*\)\?\>/ display
+syn match   gorillaNumber /[+-]\?\d[0-9_]*\%([eE][+-]\?\d[0-9_]*\)\?\%(_\+\w*\)\?\>/ display
 " A hex, binary, or octal number
-syn match   gorillaNumber /\%(\s\+\|^\|[+-]\)0[xX]\x[0-9a-fA-F_]*\>/ display
-syn match   gorillaNumber /\%(\s\+\|^\|[+-]\)0[bB][01][01_]*\>/ display
-syn match   gorillaNumber /\%(\s\+\|^\|[+-]\)0[oO]\o[0-7_]*\>/ display
-" " A redix number
-syn match   gorillaNumber /\%(\s\+\|^\|[+-]\)[1-3]\?[0-9][rR]\w\+\>/ display
-" " float
-syn match   gorillaFloat  /\%(\s\+\|^\|[+-]\)\d[0-9_]*\.\d[0-9_]\+\%([eE][-+]\?\d[0-9_]*\)\?\%(_\+\w*\)\?\>/ display
-syn match   gorillaFloat  /\%(\s\+\|^\|[+-]\)0[xX]\x[0-9a-fA-F_]*\.\x[0-9a-fA-F_]\+\>/ display
-syn match   gorillaFloat  /\%(\s\+\|^\|[+-]\)0[bB][01][01_]*\.[01][01_]\+\>/ display
-syn match   gorillaFloat  /\%(\s\+\|^\|[+-]\)0[oO]\o[0-7_]*\.\o[0-7_]\+\>/ display
-syn match   gorillaFloat  /\%(\s\+\|^\|[+-]\)[1-3]\?[0-9][rR]\w\+\.\w\+\>/ display
+syn match   gorillaNumber /[+-]\?0[xX]\x[0-9a-fA-F_]*\>/ display
+syn match   gorillaNumber /[+-]\?0[bB][01][01_]*\>/ display
+syn match   gorillaNumber /[+-]\?0[oO]\o[0-7_]*\>/ display
+" A redix number
+syn match   gorillaNumber /[+-]\?[1-3]\?[0-9][rR]\w\+\>/ display
+" float
+syn match   gorillaFloat  /[+-]\?\d[0-9_]*\.\d[0-9_]\+\%([eE][-+]\?\d[0-9_]*\)\?\%(_\+\w*\)\?\>/ display
+syn match   gorillaFloat  /[+-]\?0[xX]\x[0-9a-fA-F_]*\.\x[0-9a-fA-F_]\+\>/ display
+syn match   gorillaFloat  /[+-]\?0[bB][01][01_]*\.[01][01_]\+\>/ display
+syn match   gorillaFloat  /[+-]\?0[oO]\o[0-7_]*\.\o[0-7_]\+\>/ display
+syn match   gorillaFloat  /[+-]\?[1-3]\?[0-9][rR]\w\+\.\w\+\>/ display
 " others
 syn keyword gorillaNumber Infinity NaN
 syn cluster gorillaNormalNumber contains=gorillaNumber,gorillaFloat
@@ -237,6 +239,8 @@ if version >= 508 || !exists("did_gorillascript_syntax_inited")
   HiLink gorillaNull            Type
   HiLink gorillaMessage         Keyword
   HiLink gorillaSpecialMacro    Macro
+  HiLink gorillaMacro           Macro
+  HiLink gorillaMacroKeyword    Function
   HiLink gorillaSpecialObject   Function
   HiLink gorillaGlobal          Type
   HiLink gorillaSpecialVar      Special

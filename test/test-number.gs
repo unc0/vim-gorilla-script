@@ -40,4 +40,5 @@ a1_000_000 // wrong
 Infinity NaN
 
 // don't highlight number in identifier
+// FIXME i don't know how to fix this...
 let md5 = foo

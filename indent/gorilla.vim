@@ -31,6 +31,7 @@ let s:INDENT_AFTER_OPERATOR = '\%([([{:=]\)$'
 
 " Keywords and operators that continue a line
 let s:CONTINUATION = '\%(,\|promise!\|'
+\                  . 'macro.*\|'
 \                  . 'let\s\+\%(mutable\)\?\I\i*\s*(.*)\|'
 \                  . '#\s*(.*)\|'
 \                  . 'case.\+\|default\)$'
@@ -171,7 +172,7 @@ function! s:GetMatch(curline)
   elseif firstchar == ']'
     return s:SearchPair('\[', '\]')
   elseif a:curline =~ '^else\>'
-    return s:SearchPair('\<\%(if\|unless\|asyncif\|asyncunless\)\>', '\<else\>')
+    return s:SearchPair('\<\%(if\|unless\|for\|asyncif\|asyncunless\|asyncfor\)\>', '\<else\>')
   elseif a:curline =~ '^catch\>'
     return s:SearchPair('\<try\>', '\<catch\>')
   elseif a:curline =~ '^finally\>'
