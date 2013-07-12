@@ -34,7 +34,7 @@ let s:CONTINUATION = '\%(,\|promise!\|'
 \                  . 'macro.*\|'
 \                  . 'class.*\|'
 \                  . 'def\s\+\I\%(\i\|-\)*\s*(.*)\|'
-\                  . 'let\s\+\%(mutable\)\?\I\i*\s*(.*)\|'
+\                  . 'let\s\+\%(mutable\)\?\%(\i\|-\)*\s*(.*)\|'
 \                  . '#\s*(.*)\|'
 \                  . 'case.\+\|default\)$'
 
