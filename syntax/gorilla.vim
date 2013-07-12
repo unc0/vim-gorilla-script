@@ -53,7 +53,7 @@ syn match   gorillaExtendedOp    /\<is\>/ display
 syn match   gorillaExtendedOp    /\<\%(and\|or\|min\|max\|ownsor\|bit\%(and\|or\|xor\|not\|lshift\|rshift\|urshift\)\)\>=\?/ display
 syn keyword gorillaExtendedOp    typeof! allkeys! keys! label! map! mutate-function! set! post-dec! post-inc! is-array! is-boolean! is-function! is-null! is-number! is-object! is-string! is-undefined! is-void!
 syn match   gorillaExtendedOp    /\<\%(throw\|return\)?/ display
-syn keyword gorillaSpecialOp     as with from promise! to-promise! promisefor every-promise! some-promise! from-promise! fulfilled! rejected! delay!
+syn keyword gorillaSpecialOp     as with from promise promise! to-promise! promisefor every-promise! some-promise! from-promise! fulfilled! rejected! delay!
 
 syn match   gorillaExtendedOp    /\%([^ %=\^\<>*/+\-&?]\s*\)\@<=\%([\^\\*\/<>]\|%\{1,2}\|\%(!\~\|[!~]\)=\|==\|<=>\|>=\|<=\)\ze\%(\s*[^ %=\^\<>*/&?]\|\s\+[-+]\)/ display
 " ?= := =
