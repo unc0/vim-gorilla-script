@@ -55,6 +55,7 @@ let items =
 
 array[* % foo-bar]
 array[* + 100000]
+some-array[* + 100000]
 "$(array[* + 0x1084])"
 
 // Custom Interpolation
@@ -225,8 +226,10 @@ let arr = [1, 2, 3]
 macro operator unary +?
   ASTE $node > 0
 
-macro get-foo(x, y, z)
+macro get-foo!(x, y, z)
   let tmp = @tmp()
   AST
     let mutable $tmp = x+y+z
     return $tmp
+get-foo! 1,2,3
+
