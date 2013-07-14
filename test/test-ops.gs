@@ -98,6 +98,10 @@ abc <| 111
 111 <| bac // wrong
 111 |> bac
 abc |> 111 // wrong
+my-data |> foo
+my-data |> #(data) do-foo data
+my-data |> #-> do-foo arguments
+my-data |> # do-foo arguments
 
 // is family
 is-array!     abc
