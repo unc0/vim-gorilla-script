@@ -70,6 +70,9 @@ let str_arr2 = %"""
 let foo(name = "bar")
   "foo-$name"
 
+let bar = #(b, c)@^
+  "bind crazy curried anonymous function to $(@)"
+
 // Spread
 let hello(...names)
   "Hello, $(names.join ', ')"

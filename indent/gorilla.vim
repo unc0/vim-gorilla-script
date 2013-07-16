@@ -35,7 +35,7 @@ let s:CONTINUATION = '\%(,\|promise!\|'
 \                  . 'class.*\|'
 \                  . 'def\s\+\I\%(\i\|-\)*\s*(.*)\|'
 \                  . 'let\s\+\%(mutable\)\?\%(\i\|-\)*\s*(.*)\|'
-\                  . '#\s*(.*)\|'
+\                  . '#\s*(.*)[@^&%*]*\|'
 \                  . 'case.\+\|default\)$'
 
 " Operators that block continuation indenting

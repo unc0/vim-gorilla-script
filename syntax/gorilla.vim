@@ -33,7 +33,6 @@ syn keyword gorillaSpecialWord    mutable const static extends
 syn keyword gorillaKeyword        do end of ofall let enum namespace package
 syn keyword gorillaBoolean        true false
 syn keyword gorillaNull           null undefined void
-syn keyword gorillaMessage        confirm prompt status
 syn keyword gorillaSpecialObject  console alert next constructor
 syn keyword gorillaGlobal         GLOBAL Array Boolean Date Function Math Number Object RegExp String clear-interval set-interval clear-timeout set-timeout decode-URI decode-URI-component encode-URI encode-URI-component escape unescape has-own-property is-finite is-NaN is-prototype-of parse-float parse-int property-is-enumerable to-locale-string to-string value-of
 "}}}
@@ -160,7 +159,7 @@ syn region gorillaHeregex        start=/r'''/ end=/'''[gimy]\{,4}/ contains=@gor
 " Containers {{{
 syn region gorillaCurlies  matchgroup=gorillaCurly start=/%\?{/ end=/}/         contains=@gorillaAll
 syn region gorillaBrackets matchgroup=gorillaBracket start=/[%!]\?\[/ end=/\]/  contains=@gorillaAll
-syn region gorillaParens   matchgroup=gorillaParen start=/(/ end=/)\%(\*$\)\?/  contains=@gorillaAll
+syn region gorillaParens   matchgroup=gorillaParen start=/(/ end=/)/  contains=@gorillaAll
 syn region gorillaLists    matchgroup=gorillaList start=/^\s\+\*/ end=/$/       contains=@gorillaAll
 " array negative indexing
 syn match  gorillaNegIdxInner /.*\ze\]/ contained contains=@gorillaNormalNumber,@gorillaAllIdent
@@ -176,6 +175,10 @@ syn keyword gorillaPreDefMacro    require! async!
 syn keyword gorillaPreDefMacro    is-array! is-boolean! is-function! is-null! is-number! is-object! is-string! is-undefined! is-void!
 syn keyword gorillaPreDefMacro    typeof! allkeys! keys! label! map! mutate-function! set! post-dec! post-inc!
 syn keyword gorillaPreDefMacro    promise! to-promise! to-promise-array! every-promise! some-promise! from-promise! fulfilled! rejected! delay!
+" }}}
+
+" Others {{{
+syn match gorillaAnonFuncMod /)\@<=[@^&%*]\+/
 " }}}
 
 " Errors {{{
@@ -197,7 +200,7 @@ syn cluster gorillaAll contains=
 \ gorillaConditional,gorillaLabel,gorillaException,
 \ gorillaClassKeyword,gorillaSpecialKeyword,
 \ gorillaSpecialWord,gorillaKeyword,gorillaBoolean,
-\ gorillaNull,gorillaMessage,gorillaSpecialObject,
+\ gorillaNull,gorillaSpecialObject,
 \ gorillaGlobal,gorillaOperator,gorillaExtendedOp,
 \ gorillaSpecialOp,gorillaAssign,gorillaDotAccess,
 \ gorillaProtoAccess,gorillaLineComment,gorillaComment,
@@ -207,6 +210,7 @@ syn cluster gorillaAll contains=
 \ gorillaSpecialString,gorillaRegex,gorillaHeregex,
 \ gorillaCurlies,gorillaBrackets,gorillaParens,
 \ gorillaLists,gorillaNegIdxR,gorillaGeneric,
+\ gorillaAnonFuncMod,
 \ gorillaReservedError,gorillaExtendedOpError,
 \ gorillaSpaceError
 "}}}
@@ -243,7 +247,6 @@ if version >= 508 || !exists("did_gorillascript_syntax_inited")
 
   HiLink gorillaBoolean         Boolean
   HiLink gorillaNull            Type
-  HiLink gorillaMessage         Keyword
   HiLink gorillaSpecialWord     Macro
   HiLink gorillaMacro           Macro
   HiLink gorillaPreDefMacro     SpecialChar
@@ -278,6 +281,8 @@ if version >= 508 || !exists("did_gorillascript_syntax_inited")
   HiLink gorillaBlock           gorillaSpecialOp
   HiLink gorillaNegIdxInner     PreProc
   HiLink gorillaGenericType     Type
+
+  HiLink gorillaAnonFuncMod     PreProc
 
   HiLink gorillaReservedError   Error
   HiLink gorillaExtendedOpError Error
