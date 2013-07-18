@@ -210,7 +210,7 @@ syn cluster gorillaAll contains=
 \ gorillaSpecialString,gorillaRegex,gorillaHeregex,
 \ gorillaCurlies,gorillaBrackets,gorillaParens,
 \ gorillaLists,gorillaNegIdxR,gorillaGeneric,
-\ gorillaAnonFuncMod,
+\ gorillaAnonFuncMod,gorillaUserMacro,gorillaPreDefMacro,
 \ gorillaReservedError,gorillaExtendedOpError,
 \ gorillaSpaceError
 "}}}

@@ -235,4 +235,4 @@ macro get-foo!(x, y, z)
     let mutable $tmp = x+y+z
     return $tmp
 get-foo! 1,2,3
-
+(if get-foo! 1,2,3,4 then a else b)
