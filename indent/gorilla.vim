@@ -30,8 +30,8 @@ let s:INDENT_AFTER_KEYWORD = '^\%(if\|unless\|else\|for\|while\|until\|'
 let s:INDENT_AFTER_OPERATOR = '\%([([{:=]\)$'
 
 " Keywords and operators that continue a line
-let s:CONTINUATION = '\%(,\|promise!\|'
-\                  . 'macro.*\|'
+let s:CONTINUATION = '\%(,\|\<promise!\|'
+\                  . 'macro.*\|syntax.*\|'
 \                  . 'class.*\|'
 \                  . 'def\s\+\I\%(\i\|-\)*\s*(.*)\|'
 \                  . 'let\s\+\%(mutable\)\?\%(\i\|-\)*\s*(.*)\|'

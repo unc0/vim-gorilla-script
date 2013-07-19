@@ -26,11 +26,11 @@ syn keyword gorillaException      catch finally try Error EvalError RangeError R
 syn match   gorillaException      /\<throw\>/ display
 
 syn keyword gorillaClassKeyword   new class haskey
-syn match   gorillaClassKeyword   /\s\+\<\zs\%\(def\|super\)\>/ display
+syn match   gorillaClassKeyword   /\s\+\<\zs\%(def\|super\)\>/ display
 syn match   gorillaClassKeyword   /\%(get\|set\|property\|configurable\|writable\)\ze\%(\s*\S\+\)\?:/ display
 syn keyword gorillaSpecialKeyword require async import export asyncif asyncfor asyncunless asyncuntil asyncwhile returnif returning returnunless
-syn keyword gorillaSpecialWord    mutable const static extends
-syn keyword gorillaKeyword        do end of ofall let enum namespace package
+syn keyword gorillaSpecialWord    mutable extends const
+syn keyword gorillaKeyword        do end of ofall let
 syn keyword gorillaBoolean        true false
 syn keyword gorillaNull           null undefined void
 syn keyword gorillaSpecialObject  console alert next constructor
@@ -169,6 +169,7 @@ syn region gorillaGeneric matchgroup=gorillaGenericType start=/<\u\w*/ end=/>/ o
 
 " Macro {{{
 syn keyword gorillaMacro          macro contained
+syn match   gorillaMacro          /\s\+\<\zs\%(syntax\)\>/ display
 syn match   gorillaMacroKeyword   /macro\s\+\%(operator\s\+\%(unary\|binary\|assign\)\)\?/ display contains=gorillaMacro
 syn match   gorillaUserMacro      /\I\%(\i\|-\)*!/ display
 syn keyword gorillaPreDefMacro    require! async!
@@ -248,7 +249,7 @@ if version >= 508 || !exists("did_gorillascript_syntax_inited")
   HiLink gorillaBoolean         Boolean
   HiLink gorillaNull            Type
   HiLink gorillaSpecialWord     Macro
-  HiLink gorillaMacro           Macro
+  HiLink gorillaMacro           Keyword
   HiLink gorillaPreDefMacro     SpecialChar
   HiLink gorillaUserMacro       SpecialChar
   HiLink gorillaMacroKeyword    Function
