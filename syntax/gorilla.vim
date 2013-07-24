@@ -170,7 +170,7 @@ syn region gorillaGeneric matchgroup=gorillaGenericType start=/<\u\w*/ end=/>/ o
 " Macro {{{
 syn keyword gorillaMacro          macro contained
 syn match   gorillaMacro          /\s\+\<\zs\%(syntax\)\>/ display
-syn match   gorillaMacroKeyword   /macro\s\+\%(operator\s\+\%(unary\|binary\|assign\)\)\?/ display contains=gorillaMacro
+syn match   gorillaMacroKeyword   /macro\s\+\%(operator\s\+\%(unary\|binary\|assign\)\|helper\)\?/ display contains=gorillaMacro
 syn match   gorillaUserMacro      /\I\%(\i\|-\)*!/ display
 syn keyword gorillaPreDefMacro    require! async!
 syn keyword gorillaPreDefMacro    is-array! is-boolean! is-function! is-null! is-number! is-object! is-string! is-undefined! is-void!
