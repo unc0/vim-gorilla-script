@@ -179,7 +179,7 @@ syn keyword gorillaPreDefMacro    promise! to-promise! to-promise-array! every-p
 " }}}
 
 " Others {{{
-syn match gorillaAnonFuncMod /)\@<=[@^&%*]\+/
+syn match gorillaAnonFuncMod /[)#]\@<=[@^&%*!]\+/ display
 " }}}
 
 " Errors {{{
@@ -190,7 +190,7 @@ syn match gorillaReservedError   /\<__\%(allkeys\|array\%(-t\|T\)o\%(-i\|I\)ter\
 " === !==
 syn match gorillaExtendedOpError /===\|!==/ display
 " !x
-syn match gorillaExtendedOpError /!\ze[^=~ [.(]/ display
+syn match gorillaExtendedOpError /[^)#]\zs!\ze[^=~ [.(]/ display
 " bitop
 syn match gorillaExtendedOpError /||\|&&/ display
 "}}}
