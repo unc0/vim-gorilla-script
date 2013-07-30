@@ -11,10 +11,6 @@ endif
 " Highlight long strings.
 syn sync minlines=100
 
-" GorillaScript identifiers can have dollar signs.
-setlocal isident+=$
-setlocal iskeyword+=-,!
-
 " Keywords {{{
 syn keyword gorillaStatement      break continue return yield
 syn keyword gorillaRepeat         for while contained

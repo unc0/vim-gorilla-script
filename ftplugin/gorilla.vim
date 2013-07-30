@@ -9,12 +9,15 @@ endif
 
 let b:did_ftplugin = 1
 
-let b:undo_ftplugin = "setl fo< com< cms< ofu<"
+let b:undo_ftplugin = "setl isk< fo< com< cms< ofu< sua<"
 
-setlocal formatoptions-=t formatoptions+=croql
+setlocal isident+=$
+setlocal iskeyword+=-,!
+setlocal formatoptions-=t formatoptions+=crql
 setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
-setlocal commentstring=//%s
+setlocal commentstring=//\ %s
 setlocal omnifunc=javascriptcomplete#CompleteJS
+setlocal suffixesadd=.gs,.js
 
 " Enable GorillaMake if it won't overwrite any settings.
 if !len(&l:makeprg)
