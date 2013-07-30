@@ -9,6 +9,8 @@ endif
 
 let b:did_ftplugin = 1
 
+let b:undo_ftplugin = "setl com< cms< ofu<"
+
 setlocal formatoptions-=t formatoptions+=croql
 setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
 setlocal commentstring=//%s
