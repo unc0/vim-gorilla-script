@@ -162,7 +162,7 @@ syn region gorillaBrackets matchgroup=gorillaBracket start=/[%!]\?\[/ end=/\]/  
 syn region gorillaParens   matchgroup=gorillaParen start=/(/ end=/)/  contains=@gorillaAll
 syn region gorillaLists    matchgroup=gorillaList start=/^\s\+\*/ end=/$/       contains=@gorillaAll
 " array negative indexing
-syn match  gorillaNegIdxInner /.*\ze\]/ contained contains=@gorillaNormalNumber,@gorillaAllIdent
+syn match  gorillaNegIdxInner /.*\]/me=e-1 contained contains=@gorillaNormalNumber,@gorillaAllIdent
 syn region gorillaNegIdxR matchgroup=gorillaNegIdx start=/\I\%(\i\|-\)*\[\*/ end=/\]/ contains=gorillaNegIdxInner
 syn region gorillaGeneric matchgroup=gorillaGenericType start=/<\u\w*/ end=/>/ oneline contains=gorillaGlobal,gorillaObject
 "}}}
