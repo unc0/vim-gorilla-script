@@ -15,7 +15,7 @@ archive:
 clean:
 	-rm -f $(ARCHIVE)
 
-# Build the list of syntaxes for @coffeeAll.
+# Build the list of syntaxes for @gorillaAll.
 gorillaAll:
 	@grep -E 'syn (match|region)' syntax/gorilla.vim |\
 	 grep -v 'contained' |\

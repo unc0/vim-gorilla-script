@@ -29,6 +29,7 @@ let foo = r"""
 // heredoc
 """
 some $foo-bar $(f >> g)\tother
+some \$foo-bar \$(f >> g)
 new line
 """
 '''

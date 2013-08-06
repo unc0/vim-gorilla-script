@@ -96,7 +96,7 @@ syn match   gorillaConstant     /\<\u[A-Z0-9_]\+\>/ display
 " An @-variable
 syn match   gorillaSpecialIdent /@\<\%(\I\%(\i\|-\)*\)\?\>/ display
 " An $-variable
-syn match   gorillaSpecialIdent /\$\<\%(\I\%(\i\|-\)*\)\?\>/ display
+syn match   gorillaSpecialIdent /\\\@<!\$\<\%(\I\%(\i\|-\)*\)\?\>/ display
 " A variable name
 syn match   gorillaIdent        /\<\I\%(\i*-\+\)\+\i*\>/ display
 syn cluster gorillaAllIdent     contains=gorillaSpecialVar,gorillaObject,gorillaConstant,gorillaSpecialIdent,gorillaIdent
@@ -123,7 +123,7 @@ syn cluster gorillaNormalNumber contains=gorillaNumber,gorillaFloat
 "}}}
 
 " Strings {{{
-syn match gorillaEscape /\\\o\{3}\|\\x\x\{2}\|\\u\x\{4}\|\\u{\x\{6}}\|\\[\0-7bfrntv]/ contained display
+syn match gorillaEscape /\\\o\{3}\|\\x\x\{2}\|\\u\x\{4}\|\\u{\x\{6}}\|\\[\0-7bfrntv$]/ contained display
 " A non-interpolated string
 syn cluster gorillaBasicString contains=@Spell,gorillaEscape
 " Interpolate
