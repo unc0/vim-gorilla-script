@@ -1,5 +1,5 @@
 " Language:    GorillaScript
-" Maintainer:  "UnCO" Lin <undercooled _aT_ lavabit _dOt_ com>
+" Maintainer:  "UnCO" Lin
 " URL:         http://github.com/unc0/vim-gorilla-script
 " License:     WTFPL
 

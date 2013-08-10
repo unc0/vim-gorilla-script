@@ -1,7 +1,7 @@
 *gorilla-script.txt*                                        For Vim version 7.3
 
 =============================================================================
-Author:  "UnCO" Lin <undercooled@lavabit.com>		*gorilla-script-author*
+Author:  "UnCO" Lin             		*gorilla-script-author*
 License: WTFPL (see |gorilla-script-license|)
 =============================================================================
 
@@ -98,7 +98,7 @@ LICENSE							*gorilla-script-license*
 		DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
 			Version 2, December 2004
 
-     Copyright (C) 2013 "UnCO" Lin <undercooled@lavabit.com>
+     Copyright (C) 2013 "UnCO" Lin
 
      Everyone is permitted to copy and distribute verbatim or modified
      copies of this license document, and changing it is allowed as long
