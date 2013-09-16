@@ -50,7 +50,7 @@ syn match   gorillaExtendedOp    /\%([^ %=\^\<>*/+\-&?]\s*\)\@<=\%([\^\\*\/<>]\|
 " ?= := =
 syn match   gorillaExtendedOp    /@\?[^ :=]*\s*\zs[?:]\?=/ display
 " ?
-syn match   gorillaExtendedOp    /\>\zs\s*?=\@!/ display
+syn match   gorillaExtendedOp    /?/ display
 " & - string concat
 syn match   gorillaExtendedOp    /&\ze\P/ display
 " Pipes
@@ -61,7 +61,8 @@ syn match   gorillaExtendedOp    /\%([^ -+]\s*\)\@<=[-+]=\?/ display
 " :
 syn match   gorillaExtendedOp    /:\%(\ze\s*\%(\S\+\)\|$\)/ display
 " << >> <<< >>>
-syn match   gorillaExtendedOp    /\I\%(\i\|-\)*\s*\zs\%(<<\|>>\)\ze\s*\I\%(\i\|-\)*/ display
+syn match   gorillaExtendedOp    /\I\%(\i\|-\)*\s*\%([[(][^([]*[)]]\)*\s*\zs<</ display
+syn match   gorillaExtendedOp    />>\ze\s*\I\%(\i\|-\)*\s*\%([[(][^([]*[)]]\)*/ display
 syn match   gorillaExtendedOp    /[^<>]\s*\zs\%(<<<\|>>>\)/ display
 " , ; ...
 syn match   gorillaSpecialOp     /[,;]\|\%(\.\.\.\?\ze\S\)/ display
