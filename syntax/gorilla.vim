@@ -56,7 +56,7 @@ syn match   gorillaExtendedOp    /&\ze\P/ display
 " Pipes
 syn match   gorillaExtendedOp    /\%(\I\%(\i\|-\)*\s*\zs<|\||>\ze\s*\%(\I\%(\i\|-\)*\|#\)\)/ display
 "+ += - -=
-syn match   gorillaExtendedOp    /\%(-\{1,2}\|+\{1,2}\)\ze\I\%(\i\|-\)*/ display
+syn match   gorillaExtendedOp    /[-+]\{1,2}\ze\s*\I\%(\i\|-\)*/ display
 syn match   gorillaExtendedOp    /\%([^ -+]\s*\)\@<=[-+]=\?/ display
 " :
 syn match   gorillaExtendedOp    /:\%(\ze\s*\%(\S\+\)\|$\)/ display

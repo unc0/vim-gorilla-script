@@ -11,6 +11,7 @@ delete abc
 abc + bac
 abc - bac
 abc * bac
+foo(abc) + bac
 abc * // wrong
 abc / bac
 abc % bac
