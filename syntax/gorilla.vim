@@ -64,8 +64,10 @@ syn match   gorillaExtendedOp    /:\%(\ze\s*\%(\S\+\)\|$\)/ display
 syn match   gorillaExtendedOp    /\I\%(\i\|-\)*\s*\%([[(][^([]*[)]]\)*\s*\zs<</ display
 syn match   gorillaExtendedOp    />>\ze\s*\I\%(\i\|-\)*\s*\%([[(][^([]*[)]]\)*/ display
 syn match   gorillaExtendedOp    /[^<>]\s*\zs\%(<<<\|>>>\)/ display
-" , ; ...
-syn match   gorillaSpecialOp     /[,;]\|\%(\.\.\.\?\ze\S\)/ display
+" , ;
+syn match   gorillaSpecialOp     /[,;]/ display
+" ...
+syn match   gorillaSpecialOp     /\.\.\.\?\ze\S/ display
 " .
 syn match   gorillaSpecialOp     /\I\%(\i\|-\)*\zs!\?\.\ze\I\%(\i\|-\)*/ display
 " #-> #
@@ -84,7 +86,6 @@ syn match   gorillaProtoAccess   /::\s*\i\+/he=s+2 contains=gorillaIdent,@gorill
 syn match    gorillaShebang     "^#!.*\(gjs-\)\?gorilla\>"
 syn keyword  gorillaCommentTodo TODO FIXME XXX TBD WTF NOTE IMPORTANT DEBUG WARN contained
 syn match    gorillaLineComment "\/\/.*" contains=@Spell,gorillaCommentTodo
-syn match    gorillaCommentSkip "^[ \t]*\*\($\|[ \t]\+\)"
 syn region   gorillaComment     start="/\*" end="\*/" contains=@Spell,gorillaCommentTodo
 "}}}
 
@@ -96,7 +97,7 @@ syn match   gorillaObject       /\<\u\w*\>/ display
 syn match   gorillaConstant     /\<\u[A-Z0-9_]\+\>/ display
 " An @-variable
 syn match   gorillaSpecialIdent /@\<\%(\I\%(\i\|-\)*\)\?\>/ display
-" An $-variable
+" A $-variable
 syn match   gorillaSpecialIdent /\\\@<!\$\<\%(\I\%(\i\|-\)*\)\?\>/ display
 " A variable name
 syn match   gorillaIdent        /\<\I\%(\i*-\+\)\+\i*\>/ display
@@ -276,7 +277,7 @@ if version >= 508 || !exists("did_gorillascript_syntax_inited")
   HiLink gorillaParen           gorillaBlock
   HiLink gorillaList            gorillaBlock
   HiLink gorillaNegIdx          gorillaBlock
-  HiLink gorillaBlock           gorillaSpecialOp
+  HiLink gorillaBlock           Delimiter
   HiLink gorillaNegIdxInner     PreProc
   HiLink gorillaGenericType     Type
 
