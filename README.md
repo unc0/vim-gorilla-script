@@ -13,11 +13,11 @@ directory and updates are just a `git pull` away.
 1. Git clone sunaku's [unbundle] into `~/.vim/bundle/` and add this line to your
    vimrc:
 
-    ```vim
-    runtime bundle/vim-unbundle/unbundle.vim
-    syntax enable
-    filetype plugin indent on
-    ```
+```vim
+runtime bundle/vim-unbundle/unbundle.vim
+syntax enable
+filetype plugin indent on
+```
 
 [unbundle]: https://github.com/sunaku/vim-unbundle
 
@@ -86,9 +86,9 @@ the quickfix window if there are any errors:
 This is usually the desired behavior, so you may want to add an autocmd to your
 vimrc to do this automatically:
 
-    ```vim
-    autocmd QuickFixCmdPost * nested cwindow | redraw!
-    ```
+```vim
+autocmd QuickFixCmdPost * nested cwindow | redraw!
+```
 
 The `redraw!` command is needed to fix a redrawing quirk in terminal vim, but
 can removed for gVim.
@@ -101,9 +101,9 @@ can removed for gVim.
 To recompile a file when it's written, add an `BufWritePost` autocmd to your
 vimrc:
 
-    ```vim
-    autocmd BufWritePost *.gs silent make!
-    ```
+```vim
+autocmd BufWritePost *.gs silent make!
+```
 
 ## GorillaCompile: Compile GorillaScript Snippets
 
@@ -129,7 +129,9 @@ Using `vert` opens the GorillaCompile buffer vertically instead of horizontally
 Set the `gorilla_compile_vert` variable to split the buffer vertically by
 default:
 
-    let gorilla_compile_vert = 1
+```vim
+let gorilla_compile_vert = 1
+```
 
 By default the GorillaCompile buffer splits the source buffer in half, but this
 can be overridden by passing in a `WINDOW-SIZE`:
@@ -195,10 +197,10 @@ the given `RANGE` and any extra `COFFEE-OPTIONS` are passed to `gorilla`.
 
 GorillaScript is highlighted and indented within
 
-  ```html
-  <script type="text/gorillascript">
-  </script>
-  ```
+```html
+<script type="text/gorillascript">
+</script>
+```
 
 blocks in html files.
 
@@ -220,11 +222,11 @@ them with a comma: `GorillaCompile,GorillaWatch`.
 GorillaBufNew is ran when a new scratch buffer is created. It's called from the
 new buffer, so it can be used to do additional set up.
 
-  ```vim
-  augroup GorillaBufNew
-  autocmd User * set wrap
-  augroup END
-  ```
+```vim
+augroup GorillaBufNew
+autocmd User * set wrap
+augroup END
+```
 
 *Used By*: GorillaCompile, GorillaWatch, GorillaRun
 
@@ -234,12 +236,12 @@ GorillaBufUpdate is ran when a scratch buffer is updated with output from
 `gorilla`. It's called from the scratch buffer, so it can be used to alter the
 compiled output.
 
-  ```vim
-  " Switch back to the source buffer after updating.
-  augroup GorillaBufUpdate
-  autocmd User GorillaCompile,GorillaRun exec bufwinnr(b:gorilla_src_buf) 'wincmd w'
-  augroup END
-  ```
+```vim
+" Switch back to the source buffer after updating.
+augroup GorillaBufUpdate
+autocmd User GorillaCompile,GorillaRun exec bufwinnr(b:gorilla_src_buf) 'wincmd w'
+augroup END
+```
 
 *Used By*: GorillaCompile, GorillaWatch, GorillaRun
 
@@ -255,9 +257,9 @@ By default, the indent function matches the indent of the previous line if it
 doesn't find a reason to indent or outdent. To change this behavior so it
 instead keeps the [current indent of the cursor][98], use
 
-  ```vim
-  let gorilla_indent_keep_current = 1
-  ```
+```vim
+let gorilla_indent_keep_current = 1
+```
 
 [98]: https://github.com/kchmck/vim-gorilla-script/pull/98
 
@@ -266,17 +268,17 @@ instead keeps the [current indent of the cursor][98], use
 Note that if you change this after a gorilla file has been loaded, you'll have to
 reload the indent script for the change to take effect:
 
-  ```vim
-  unlet b:did_indent | runtime indent/gorilla.vim
-  ```
+```vim
+unlet b:did_indent | runtime indent/gorilla.vim
+```
 
 #### gorilla\_compiler
 
 Path to the `gorilla` executable used by the `Gorilla` commands:
 
-  ```vim
-  let gorilla_compiler = '/usr/bin/gorilla'
-  ```
+```vim
+let gorilla_compiler = '/usr/bin/gorilla'
+```
 
 *Default*: `'gorilla'` (search `$PATH` for executable)
 
@@ -284,9 +286,9 @@ Path to the `gorilla` executable used by the `Gorilla` commands:
 
 Options to pass to `gorilla` with `:make`:
 
-  ```vim
-  let gorilla_make_options = '--bare'
-  ```
+```vim
+let gorilla_make_options = '--bare'
+```
 
 *Default*: `''` (nothing)
 
@@ -299,9 +301,9 @@ effect.
 Open the GorillaCompile buffer with a vertical split instead of a horizontal
 one:
 
-  ```vim
-  let gorilla_compile_vert = 1
-  ```
+```vim
+let gorilla_compile_vert = 1
+```
 
 *Default*: `unlet gorilla_compile_vert`
 
@@ -310,9 +312,9 @@ one:
 Open the GorillaWatch buffer with a vertical split instead of a horizontal
 one:
 
-  ```vim
-  let gorilla_watch_vert = 1
-  ```
+```vim
+let gorilla_watch_vert = 1
+```
 
 *Default*: `unlet gorilla_watch_vert`
 
@@ -321,9 +323,9 @@ one:
 Open the GorillaRun buffer with a vertical split instead of a horizontal
 one:
 
-  ```vim
-  let gorilla_run_vert = 1
-  ```
+```vim
+let gorilla_run_vert = 1
+```
 
 *Default*: `unlet gorilla_run_vert`
 
@@ -336,18 +338,18 @@ Add these lines to your vimrc to disable the relevant syntax group.
 Trailing whitespace is highlighted as an error by default. This can be disabled
 with:
 
-  ```vim
-  hi link GorillaSpaceError NONE
-  ```
+```vim
+hi link GorillaSpaceError NONE
+```
 
 ### Disable reserved words error
 
 Reserved words like `function` and `var` are highlighted as an error where
 they're not allowed in GorillaScript. This can be disabled with:
 
-  ```vim
-  hi link gorillaReservedError NONE
-  ```
+```vim
+hi link gorillaReservedError NONE
+```
 
 ## Tune Vim for GorillaScript
 
@@ -359,54 +361,54 @@ Folding by indentation works well for GorillaScript functions and classes.
 
 To fold by indentation in GorillaScript files, add this line to your vimrc:
 
-  ```vim
-  autocmd BufNewFile,BufReadPost *.gs setl foldmethod=indent nofoldenable
-  ```
+```vim
+autocmd BufNewFile,BufReadPost *.gs setl foldmethod=indent nofoldenable
+```
 
 With this, folding is disabled by default but can be quickly toggled per-file
 by hitting `zi`. To enable folding by default, remove `nofoldenable`:
 
-  ```vim
-  autocmd BufNewFile,BufReadPost *.gs setl foldmethod=indent
-  ```
+```vim
+autocmd BufNewFile,BufReadPost *.gs setl foldmethod=indent
+```
 
 ### Two-space indentation
 
 To get standard two-space indentation in GorillaScript files, add this line to
 your vimrc:
 
-  ```vim
-  autocmd BufNewFile,BufReadPost *.gs setl shiftwidth=2 expandtab
-  ```
+```vim
+autocmd BufNewFile,BufReadPost *.gs setl shiftwidth=2 expandtab
+```
 
 ## Cooperate with other plugins
 
 ### [NERDCommenter]
 
-  ```vim
-  let g:NERDCustomDelimiters.gorilla = {
-    \ 'left': '//',
-    \ 'leftAlt': '/*',
-    \ 'rightAlt': '*/',
-    \}
-  ```
+```vim
+let g:NERDCustomDelimiters.gorilla = {
+  \ 'left': '//',
+  \ 'leftAlt': '/*',
+  \ 'rightAlt': '*/',
+  \}
+```
 
 ### [Phrase]
 
-  ```vim
-  let g:phrase_ft_tbl.gorilla = {
-    \ "ext": "gs",
-    \ "cmt": ["/*", "*/"]
-    \}
-  ```
+```vim
+let g:phrase_ft_tbl.gorilla = {
+  \ "ext": "gs",
+  \ "cmt": ["/*", "*/"]
+  \}
+```
 
 ### [Syntastic]
 
 *You should comment this autocmd out in your vimrc:*
 
-  ```vim
-  " autocmd BufWritePost *.gs silent make!
-  ```
+```vim
+" autocmd BufWritePost *.gs silent make!
+```
 
 1. Install Syntastic:
 
