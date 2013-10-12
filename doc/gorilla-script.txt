@@ -24,12 +24,6 @@ Also included is an eco syntax and support for GorillaScript in HTML.
 
 COMMANDS					*gorilla-script-commands*
 
-						*:GorillaMake*
-:GorillaMake[!] {opts}	Wrapper around |:make| that also passes options in
-                        |g:gorilla_make_options| to the compiler. Use |:silent|
-                        to hide compiler output. See |:make| for more
-                        information about [!] and other helpful commands.
-
 						*:GorillaCompile*
 :[range]GorillaCompile [vertical] [{win-size}]
 			Shows how the current file or [range] is compiled
@@ -62,24 +56,23 @@ Global Settings~
 Set the path to the compiler used by |GorillaMake| and |GorillaCompile| (it's
 {gorilla} by default.)
 >
-	let gorilla_compiler = '/usr/bin/gorilla'
+	let g:gorilla_compiler = '/usr/bin/gorilla'
 <
 						*g:gorilla_make_options*
 Set default options |GorillaMake| should pass to the compiler.
 >
-	let gorilla_make_options = '--bare'
+	let g:gorilla_make_options = '--bare'
 <
 						*g:gorilla_compile_vert*
 Split the GorillaCompile buffer vertically by default.
 >
-	let gorilla_compile_vert = 1
+	let g:gorilla_compile_vert = 1
 <
 Syntax Highlighting~
 						*ft-gorilla-script-syntax*
-Trailing whitespace is highlighted as an error by default. This can be
-disabled with:
+Trailing whitespace cab be highlighted as an error with:
 >
-	hi link gorillaSpaceError NONE
+	let g:gorilla_trailing_space_error = 1
 
 COMPILER					*compiler-gorilla-script*
 
