@@ -19,190 +19,340 @@ setlocal commentstring=//\ %s
 setlocal omnifunc=javascriptcomplete#CompleteJS
 setlocal suffixesadd=.gs,.js
 
+" Create custom augroups.
+augroup GorillaBufUpdate | augroup END
+augroup GorillaBufNew | augroup END
+
 " Enable GorillaMake if it won't overwrite any settings.
 if !len(&l:makeprg)
   compiler gorilla
 endif
 
-" Check here too in case the compiler above isn't loaded.
-if !exists('gorilla_compiler')
-  let gorilla_compiler = 'gorilla'
-endif
-
-" Reset the GorillaCompile variables for the current buffer.
-function! s:GorillaCompileResetVars()
-  " Compiled output buffer
-  let b:gorilla_compile_buf = -1
-  let b:gorilla_compile_pos = []
-
-  " If GorillaCompile is watching a buffer
-  let b:gorilla_compile_watch = 0
+" Switch to the window for buf.
+function! s:SwitchWindow(buf)
+  exec bufwinnr(a:buf) 'wincmd w'
 endfunction
 
-" Clean things up in the source buffer.
+" Create a new scratch buffer and return the bufnr of it. After the function
+" returns, vim remains in the scratch buffer so more set up can be done.
+function! s:ScratchBufBuild(src, vert, size)
+  if a:size <= 0
+    if a:vert
+      let size = winwidth(bufwinnr(a:src)) / 2
+    else
+      let size = winheight(bufwinnr(a:src)) / 2
+    endif
+  endif
+
+  if a:vert
+    vertical belowright new
+    exec 'vertical resize' size
+  else
+    belowright new
+    exec 'resize' size
+  endif
+
+  setlocal bufhidden=wipe buftype=nofile nobuflisted noswapfile nomodifiable
+  nnoremap <buffer> <silent> q :hide<CR>
+
+  return bufnr('%')
+endfunction
+
+" Replace buffer contents with text and delete the last empty line.
+function! s:ScratchBufUpdate(buf, text)
+  " Move to the scratch buffer.
+  call s:SwitchWindow(a:buf)
+
+  " Double check we're in the scratch buffer before overwriting.
+  if bufnr('%') != a:buf
+    throw 'unable to change to scratch buffer'
+  endif
+
+  setlocal modifiable
+    silent exec '% delete _'
+    silent put! =a:text
+    silent exec '$ delete _'
+  setlocal nomodifiable
+endfunction
+
+" Parse the output of gorilla into a qflist entry for src buffer.
+function! s:ParseGorillaError(output, src, startline)
+  " Gorilla error is always on first line?
+  let match = matchlist(a:output,
+  \                     '^\w\+Error: \(.\{-}\) at \(\d\+\):\(\d\+\)' . "\n")
+
+  if !len(match)
+    return
+  endif
+
+  " Consider the line number from gorilla as relative and add it to the beginning
+  " line number of the range the command was called on, then subtract one for
+  " zero-based relativity.
+  call setqflist([{'bufnr': a:src, 'lnum': a:startline + str2nr(match[2]) - 1,
+  \                'type': 'E', 'col': str2nr(match[3]), 'text': match[1]}], 'r')
+endfunction
+
+" Reset source buffer variables.
+function! s:GorillaCompileResetVars()
+  " Variables defined in source buffer:
+  "   b:gorilla_compile_buf: bufnr of output buffer
+  " Variables defined in output buffer:
+  "   b:gorilla_src_buf: bufnr of source buffer
+  "   b:gorilla_compile_pos: previous cursor position in output buffer
+
+  let b:gorilla_compile_buf = -1
+endfunction
+
+function! s:GorillaWatchResetVars()
+  " Variables defined in source buffer:
+  "   b:gorilla_watch_buf: bufnr of output buffer
+  " Variables defined in output buffer:
+  "   b:gorilla_src_buf: bufnr of source buffer
+  "   b:gorilla_watch_pos: previous cursor position in output buffer
+
+  let b:gorilla_watch_buf = -1
+endfunction
+
+function! s:GorillaRunResetVars()
+  " Variables defined in gorillaRun source buffer:
+  "   b:gorilla_run_buf: bufnr of output buffer
+  " Variables defined in gorillaRun output buffer:
+  "   b:gorilla_src_buf: bufnr of source buffer
+  "   b:gorilla_run_pos: previous cursor position in output buffer
+
+  let b:gorilla_run_buf = -1
+endfunction
+
+" Clean things up in the source buffers.
 function! s:GorillaCompileClose()
-  exec bufwinnr(b:gorilla_compile_src_buf) 'wincmd w'
-  silent! autocmd! GorillaCompileAuWatch * <buffer>
+  " Switch to the source buffer if not already in it.
+  silent! call s:SwitchWindow(b:gorilla_src_buf)
   call s:GorillaCompileResetVars()
 endfunction
 
-" Update the GorillaCompile buffer given some input lines.
-function! s:GorillaCompileUpdate(startline, endline)
-  let input = join(getline(a:startline, a:endline), "\n")
+function! s:GorillaWatchClose()
+  silent! call s:SwitchWindow(b:gorilla_src_buf)
+  silent! autocmd! GorillaAuWatch * <buffer>
+  call s:GorillaWatchResetVars()
+endfunction
 
-  " Move to the GorillaCompile buffer.
-  exec bufwinnr(b:gorilla_compile_buf) 'wincmd w'
+function! s:GorillaRunClose()
+  silent! call s:SwitchWindow(b:gorilla_src_buf)
+  call s:GorillaRunResetVars()
+endfunction
+
+" Compile the lines between startline and endline and put the result into buf.
+function! s:GorillaCompileToBuf(buf, startline, endline)
+  let src = bufnr('%')
+  let input = join(getline(a:startline, a:endline), "\n")
 
   " Gorilla doesn't like empty input.
   if !len(input)
+    " Function should still return within output buffer.
+    call s:SwitchWindow(a:buf)
     return
   endif
 
-  " Compile input.
+  " Pipe lines into gorilla.
   let output = system(g:gorilla_compiler . ' -spb 2>&1', input)
 
-  " Be sure we're in the GorillaCompile buffer before overwriting.
-  if exists('b:gorilla_compile_buf')
-    echoerr 'GorillaCompile buffers are messed up'
-    return
-  endif
+  " Paste output into output buffer.
+  call s:ScratchBufUpdate(a:buf, output)
 
-  " Replace buffer contents with new output and delete the last empty line.
-  setlocal modifiable
-    exec '% delete _'
-    put! =output
-    exec '$ delete _'
-  setlocal nomodifiable
-
-  " Highlight as JavaScript if there is no compile error.
+  " Highlight as JavaScript if there were no compile errors.
   if v:shell_error
+    call s:ParseGorillaError(output, src, a:startline)
     setlocal filetype=
   else
+    " Clear the quickfix list.
+    call setqflist([], 'r')
     setlocal filetype=javascript
   endif
-
-  call setpos('.', b:gorilla_compile_pos)
-endfunction
-
-" Update the GorillaCompile buffer with the whole source buffer.
-function! s:GorillaCompileWatchUpdate()
-  call s:GorillaCompileUpdate(1, '$')
-  exec bufwinnr(b:gorilla_compile_src_buf) 'wincmd w'
 endfunction
 
 " Peek at compiled GorillaScript in a scratch buffer. We handle ranges like this
 " to prevent the cursor from being moved (and its position saved) before the
 " function is called.
 function! s:GorillaCompile(startline, endline, args)
-  if !executable(g:gorilla_compiler)
-    echoerr "Can't find GorillaScript compiler `" . g:gorilla_compiler . "`"
+  if a:args =~ '\<watch\>'
+    echoerr 'GorillaCompile watch is deprecated! Please use GorillaWatch instead'
+    sleep 5
+    call s:GorillaWatch(a:args)
     return
   endif
 
-  " If in the GorillaCompile buffer, switch back to the source buffer and
-  " continue.
+  " Switch to the source buffer if not already in it.
+  silent! call s:SwitchWindow(b:gorilla_src_buf)
+
+  " Bail if not in source buffer.
   if !exists('b:gorilla_compile_buf')
-    exec bufwinnr(b:gorilla_compile_src_buf) 'wincmd w'
-  endif
-
-  " Parse arguments.
-  let watch = a:args =~ '\<watch\>'
-  let unwatch = a:args =~ '\<unwatch\>'
-  let size = str2nr(matchstr(a:args, '\<\d\+\>'))
-
-  " Determine default split direction.
-  if exists('g:gorilla_compile_vert')
-    let vert = 1
-  else
-    let vert = a:args =~ '\<vert\%[ical]\>'
-  endif
-
-  " Remove any watch listeners.
-  silent! autocmd! GorillaCompileAuWatch * <buffer>
-
-  " If just unwatching, don't compile.
-  if unwatch
-    let b:gorilla_compile_watch = 0
     return
   endif
-
-  if watch
-    let b:gorilla_compile_watch = 1
-  endif
-
-  " Build the GorillaCompile buffer if it doesn't exist.
+  " Build the output buffer if it doesn't exist.
   if bufwinnr(b:gorilla_compile_buf) == -1
-    let src_buf = bufnr('%')
-    let src_win = bufwinnr(src_buf)
+    let src = bufnr('%')
 
-    " Create the new window and resize it.
-    if vert
-      let width = size ? size : winwidth(src_win) / 2
+    let vert = exists('g:gorilla_compile_vert') || a:args =~ '\<vert\%[ical]\>'
+    let size = str2nr(matchstr(a:args, '\<\d\+\>'))
 
-      belowright vertical new
-      exec 'vertical resize' width
-    else
-      " Try to guess the compiled output's height.
-      let height = size ? size : min([winheight(src_win) / 2,
-      \                               a:endline - a:startline + 2])
+    " Build the output buffer and save the source bufnr.
+    let buf = s:ScratchBufBuild(src, vert, size)
+    let b:gorilla_src_buf = src
 
-      belowright new
-      exec 'resize' height
-    endif
+    " Set the buffer name.
+    exec 'silent! file [GorillaCompile ' . src . ']'
 
-    " We're now in the scratch buffer, so set it up.
-    setlocal bufhidden=wipe buftype=nofile
-    setlocal nobuflisted nomodifiable noswapfile nowrap
-
+    " Clean up the source buffer when the output buffer is closed.
     autocmd BufWipeout <buffer> call s:GorillaCompileClose()
-    " Save the cursor when leaving the GorillaCompile buffer.
+    " Save the cursor when leaving the output buffer.
     autocmd BufLeave <buffer> let b:gorilla_compile_pos = getpos('.')
 
-    nnoremap <buffer> <silent> q :hide<CR>
+    " Run user-defined commands on new buffer.
+    silent doautocmd GorillaBufNew User GorillaCompile
 
-    let b:gorilla_compile_src_buf = src_buf
-    let buf = bufnr('%')
-
-    " Go back to the source buffer and set it up.
-    exec bufwinnr(b:gorilla_compile_src_buf) 'wincmd w'
+    " Switch back to the source buffer and save the output bufnr. This also
+    " triggers BufLeave above.
+    call s:SwitchWindow(src)
     let b:gorilla_compile_buf = buf
   endif
 
-  if b:gorilla_compile_watch
-    call s:GorillaCompileWatchUpdate()
+  " Fill the scratch buffer.
+  call s:GorillaCompileToBuf(b:gorilla_compile_buf, a:startline, a:endline)
+  " Reset cursor to previous position.
+  call setpos('.', b:gorilla_compile_pos)
 
-    augroup GorillaCompileAuWatch
-      autocmd InsertLeave <buffer> call s:GorillaCompileWatchUpdate()
-    augroup END
-  else
-    call s:GorillaCompileUpdate(a:startline, a:endline)
-  endif
+  " Run any user-defined commands on the scratch buffer.
+  silent doautocmd GorillaBufUpdate User GorillaCompile
 endfunction
 
-" Complete arguments for the GorillaCompile command.
-function! s:GorillaCompileComplete(arg, cmdline, cursor)
-  let args = ['unwatch', 'vertical', 'watch']
+" Update the scratch buffer and switch back to the source buffer.
+function! s:GorillaWatchUpdate()
+  call s:GorillaCompileToBuf(b:gorilla_watch_buf, 1, '$')
+  call setpos('.', b:gorilla_watch_pos)
+  silent doautocmd GorillaBufUpdate User GorillaWatch
+  call s:SwitchWindow(b:gorilla_src_buf)
+endfunction
 
-  if !len(a:arg)
+" Continually compile a source buffer.
+function! s:GorillaWatch(args)
+  silent! call s:SwitchWindow(b:gorilla_src_buf)
+
+  if !exists('b:gorilla_watch_buf')
+    return
+  endif
+
+  if bufwinnr(b:gorilla_watch_buf) == -1
+    let src = bufnr('%')
+
+    let vert = exists('g:gorilla_watch_vert') || a:args =~ '\<vert\%[ical]\>'
+    let size = str2nr(matchstr(a:args, '\<\d\+\>'))
+
+    let buf = s:ScratchBufBuild(src, vert, size)
+    let b:gorilla_src_buf = src
+
+    exec 'silent! file [GorillaWatch ' . src . ']'
+
+    autocmd BufWipeout <buffer> call s:GorillaWatchClose()
+    autocmd BufLeave <buffer> let b:gorilla_watch_pos = getpos('.')
+
+    silent doautocmd GorillaBufNew User GorillaWatch
+
+    call s:SwitchWindow(src)
+    let b:gorilla_watch_buf = buf
+  endif
+
+  " Make sure only one watch autocmd is defined on this buffer.
+  silent! autocmd! GorillaAuWatch * <buffer>
+
+  augroup GorillaAuWatch
+    autocmd InsertLeave <buffer> call s:GorillaWatchUpdate()
+    autocmd BufWritePost <buffer> call s:GorillaWatchUpdate()
+  augroup END
+
+  call s:GorillaWatchUpdate()
+endfunction
+
+" Run a snippet of GorillaScript between startline and endline.
+function! s:GorillaRun(startline, endline, args)
+  silent! call s:SwitchWindow(b:gorilla_src_buf)
+
+  if !exists('b:gorilla_run_buf')
+    return
+  endif
+
+  if bufwinnr(b:gorilla_run_buf) == -1
+    let src = bufnr('%')
+
+    let buf = s:ScratchBufBuild(src, exists('g:gorilla_run_vert'), 0)
+    let b:gorilla_src_buf = src
+
+    exec 'silent! file [GorillaRun ' . src . ']'
+
+    autocmd BufWipeout <buffer> call s:GorillaRunClose()
+    autocmd BufLeave <buffer> let b:gorilla_run_pos = getpos('.')
+
+    silent doautocmd GorillaBufNew User GorillaRun
+
+    call s:SwitchWindow(src)
+    let b:gorilla_run_buf = buf
+  endif
+
+  if a:startline == 1 && a:endline == line('$')
+    let output = system(g:gorilla_compiler .
+    \                   ' ' . fnameescape(expand('%')) .
+    \                   ' ' . a:args)
+  else
+    let input = join(getline(a:startline, a:endline), "\n")
+
+    if !len(input)
+      return
+    endif
+
+    let output = system(g:gorilla_compiler .
+    \                   ' -s' .
+    \                   ' ' . a:args, input)
+  endif
+
+  call s:ScratchBufUpdate(b:gorilla_run_buf, output)
+  call setpos('.', b:gorilla_run_pos)
+
+  silent doautocmd GorillaBufUpdate User GorillaRun
+endfunction
+
+" Complete arguments for Gorilla* commands.
+function! s:GorillaComplete(cmd, cmdline, cursor)
+  let args = ['vertical']
+
+  " If no partial command, return all possibilities.
+  if !len(a:cmd)
     return args
   endif
 
-  let match = '^' . a:arg
+  let pat = '^' . a:cmd
 
   for arg in args
-    if arg =~ match
+    if arg =~ pat
       return [arg]
     endif
   endfor
 endfunction
 
-" Don't overwrite the GorillaCompile variables.
+" Set initial state variables if they don't exist
 if !exists('b:gorilla_compile_buf')
   call s:GorillaCompileResetVars()
 endif
 
-" Peek at compiled GorillaScript.
-command! -range=% -bar -nargs=* -complete=customlist,s:GorillaCompileComplete
+if !exists('b:gorilla_watch_buf')
+  call s:GorillaWatchResetVars()
+endif
+
+if !exists('b:gorilla_run_buf')
+  call s:GorillaRunResetVars()
+endif
+
+command! -range=% -bar -nargs=* -complete=customlist,s:GorillaComplete
 \        GorillaCompile call s:GorillaCompile(<line1>, <line2>, <q-args>)
-" Run some GorillaScript.
-command! -range=% -bar GorillaRun <line1>,<line2>:w !gorilla -s
+command! -bar -nargs=* -complete=customlist,s:GorillaComplete
+\        GorillaWatch call s:GorillaWatch(<q-args>)
+command! -range=% -bar -nargs=* GorillaRun
+\        call s:GorillaRun(<line1>, <line2>, <q-args>)

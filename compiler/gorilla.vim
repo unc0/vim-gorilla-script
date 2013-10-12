@@ -13,27 +13,21 @@
 
 if exists('current_compiler')
   finish
-else
-  let current_compiler = 'gorilla'
 endif
+
+let current_compiler = 'gorilla'
+call gorilla#GorillaSetUpVariables()
 
 " Pattern to check if gorilla is the compiler
 let s:pat = '^' . current_compiler
 
-" Path to GorillaScript compiler
-if !exists('gorilla_compiler')
-  let gorilla_compiler = 'gorilla'
-endif
-
-" Extra options passed to GorillaMake
-if !exists('gorilla_make_options')
-  let gorilla_make_options = ''
-endif
-
 " Get a `makeprg` for the current filename.
 function! s:GetMakePrg()
-  return g:gorilla_compiler . ' -c ' . g:gorilla_make_options . ' $* '
-  \                        . fnameescape(expand('%'))
+  return g:gorilla_compiler
+        \. ' -c '
+        \. g:gorilla_make_options
+        \. ' $* '
+        \. fnameescape(expand('%'))
 endfunction
 
 " Set `makeprg` and return 1 if gorilla is still the compiler, else return 0.
@@ -50,14 +44,21 @@ function! s:SetMakePrg()
 endfunction
 
 " Set a dummy compiler so we can check whether to set locally or globally.
-CompilerSet makeprg=gorilla
+exec 'CompilerSet makeprg=' . current_compiler
+" Then actually set the compiler.
 call s:SetMakePrg()
+call gorilla#GorillaSetUpErrorFormat()
 
-" CompilerSet errorformat=%-PCompiling\ %f\ ...\ ,%\\w%\\+%trror\ at\ #%l:\ %m,%-G%.%#
-CompilerSet errorformat=Compiling\ %.%#.gs\ ...\ %\\w%\\+%trror:\ %m\ at\ %f:%l:%c,%-G%.%#
+function! s:GorillaMakeDeprecated(bang, args)
+  echoerr 'GorillaMake is deprecated! Please use :make instead, its behavior ' .
+  \       'is identical.'
+  sleep 5
+  exec 'make' . a:bang a:args
+endfunction
 
 " Compile the current file.
-command! -bang -bar -nargs=* GorillaMake make<bang> <args>
+command! -bang -bar -nargs=* GorillaMake
+\        call s:CoffeeMakeDeprecated(<q-bang>, <q-args>)
 
 " Set `makeprg` on rename since we embed the filename in the setting.
 augroup GorillaUpdateMakePrg
