@@ -8,8 +8,7 @@ if exists('b:current_syntax') && b:current_syntax == 'gorilla'
   finish
 endif
 
-" Highlight long strings.
-syn sync minlines=100
+syn sync ccomment gorillaBlockComment
 
 " Keywords {{{
 syn keyword gorillaStatement      break continue return yield
@@ -86,7 +85,7 @@ syn match   gorillaProtoAccess   /::\s*\i\+/he=s+2 contains=gorillaIdent,@gorill
 syn match    gorillaShebang     "^#!.*\(gjs-\)\?gorilla\>"
 syn keyword  gorillaCommentTodo TODO FIXME XXX TBD WTF NOTE IMPORTANT DEBUG WARN contained
 syn match    gorillaLineComment "\/\/.*" contains=@Spell,gorillaCommentTodo
-syn region   gorillaComment     start="/\*" end="\*/" contains=@Spell,gorillaCommentTodo
+syn region   gorillaBlockComment     start="/\*" end="\*/" contains=@Spell,gorillaCommentTodo
 "}}}
 
 " Variables {{{
@@ -202,7 +201,7 @@ syn cluster gorillaAll contains=
 \ gorillaNull,gorillaSpecialObject,
 \ gorillaGlobal,gorillaOperator,gorillaExtendedOp,
 \ gorillaSpecialOp,gorillaAssign,gorillaDotAccess,
-\ gorillaProtoAccess,gorillaLineComment,gorillaComment,
+\ gorillaProtoAccess,gorillaLineComment,gorillaBlockComment,
 \ gorillaSpecialVar,gorillaObject,gorillaConstant,
 \ gorillaSpecialIdent,gorillaIdent,gorillaNumber,
 \ gorillaFloat,gorillaString,gorillaHereString,
@@ -232,11 +231,11 @@ if version >= 508 || !exists("did_gorillascript_syntax_inited")
   HiLink gorillaSpecialKeyword  gorillaKeyword
   HiLink gorillaKeyword         Keyword
 
-  HiLink gorillaShebang         gorillaComment
-  HiLink gorillaLineComment     gorillaComment
-  HiLink gorillaHeregexComment  gorillaComment
+  HiLink gorillaShebang         Comment
+  HiLink gorillaLineComment     Comment
+  HiLink gorillaHeregexComment  Comment
   HiLink gorillaCommentTodo     Todo
-  HiLink gorillaComment         Comment
+  HiLink gorillaBlockComment    Comment
 
   HiLink gorillaDotAccess       gorillaOperator
   HiLink gorillaProtoAccess     gorillaOperator
