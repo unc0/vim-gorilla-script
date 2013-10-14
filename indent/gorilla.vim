@@ -53,7 +53,6 @@ let s:FUNCTION = '\C\%(let\s\+\%(mutable\)\?\s*\I\%(\i\|-\)*(.*)\|'
 " Operators that continue a line onto the next line
 let s:CONTINUATION_OP = '\C\%(,\|\<promise!\|\<promisefor.*\|'
 \                     . 'macro.*\|syntax.*\|'
-\                     . 'class.*\|'
 \                     . 'case.\+\|default\)$'
 
 " Ancestor operators that prevent continuation indenting
@@ -331,11 +330,7 @@ function! GetGorillaIndent(curlnum)
   " Indent if the previous line starts a function block, but don't force
   " indenting if the line is non-blank (for empty function bodies.)
   if prevline =~ s:FUNCTION
-    " if strlen(getline(a:curlnum)) > indent(a:curlnum)
-      " return min([indent(prevnlnum) + s:ShiftWidth(), indent(a:curlnum)])
-    " else
     return indent(prevnlnum) + s:ShiftWidth()
-    " endif
   endif
 
   " Check if continuation indenting is needed. If the line ends in a slash, make
