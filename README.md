@@ -432,18 +432,18 @@ let g:phrase_ft_tbl.gorilla = {
 
         --langdef=gorilla
         --langmap=gorilla:.gs
-        --regex-gorilla=/^let[ \t]+([A-Za-z0-9_$\-]+)[ \t]*=[ \t]*require/\1/e,module,modules/
-        --regex-gorilla=/^let[ \t]+([A-Za-z0-9_$\-]+)[ \t]*=[ \t]*\{/\1/o,object,objects/
-        --regex-gorilla=/^const[ \t]+([A-Z][A-Z0-9_\-]+)[ \t]*=/\1/C,constant,constants/
-        --regex-gorilla=/^let[ \t]+([A-Za-z0-9_$\-]+)[ \t]*=[ \t]*#(\(.*\))?/\1/f,function,functions/
-        --regex-gorilla=/^let[ \t]+([A-Za-z0-9_$\-]+)[ \t]*\(.*\)/\1/f,function,functions/
-        --regex-gorilla=/^[^\/*]*class[ \t]+([A-Za-z0-9_$\-]+)/\1/c,class,classes/
-        --regex-gorilla=/^[^\/*]*def[ \t]+([A-Za-z0-9_$\-]+)/\1/m,method,methods/
-        --regex-gorilla=/^let[ \t]+([A-Za-z0-9_$\-]+)[ \t]*=[ \t]*\[/\1/a,array,arrays/
-        --regex-gorilla=/^let[ \t]+([^= ]+)[ \t]*=[ \t]*r'[^']*/\1/r,regex,regexes/
-        --regex-gorilla=/^let[ \t]+([^= ]+)[ \t]*=[ \t]*r"[^"]*/\1/r,regex,regexes/
-        --regex-gorilla=/^let[ \t]+([^= ]+)[ \t]*=[ \t]*[^"r]'[^']*/\1/s,string,strings/
-        --regex-gorilla=/^let[ \t]+([^= ]+)[ \t]*=[ \t]*[^'r]"[^"]*/\1/s,string,strings/
+        --regex-gorilla=/^let[ \t]+([A-Za-z0-9_$\-]+)[ \t]*=[ \t]*require/\1/e,module/
+        --regex-gorilla=/^let[ \t]+([A-Za-z0-9_$\-]+)[ \t]*=[ \t]*\{?$/\1/o,object/
+        --regex-gorilla=/^const[ \t]+([A-Z][A-Z0-9_\-]+)[ \t]*=/\1/C,constant/
+        --regex-gorilla=/^let[ \t]+([A-Za-z0-9_$\-]+)[ \t]*=[ \t]*#(\(.*\))?/\1/f,function/
+        --regex-gorilla=/^let[ \t]+([A-Za-z0-9_$\-]+)[ \t]*\(.*\)/\1/f,function/
+        --regex-gorilla=/^[^\/*]*class[ \t]+([A-Za-z0-9_$\-]+)/\1/c,class/
+        --regex-gorilla=/^[^\/*]*def[ \t]+([A-Za-z0-9_$\-]+)/\1/m,method/
+        --regex-gorilla=/^let[ \t]+([A-Za-z0-9_$\-]+)[ \t]*=[ \t]*\[/\1/a,array/
+        --regex-gorilla=/^let[ \t]+([^= ]+)[ \t]*=[ \t]*r'[^']*/\1/r,regex/
+        --regex-gorilla=/^let[ \t]+([^= ]+)[ \t]*=[ \t]*r"[^"]*/\1/r,regex/
+        --regex-gorilla=/^let[ \t]+([^= ]+)[ \t]*=[ \t]*[^"r]'[^']*/\1/s,string/
+        --regex-gorilla=/^let[ \t]+([^= ]+)[ \t]*=[ \t]*[^'r]"[^"]*/\1/s,string/
 
 3. Add this to your .vimrc:
 
