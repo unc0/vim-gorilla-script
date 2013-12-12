@@ -14,20 +14,19 @@ if exists("g:loaded_syntastic_gorilla_gorilla_checker")
 endif
 let g:loaded_syntastic_gorilla_gorilla_checker=1
 
-function! SyntaxCheckers_gorilla_gorilla_IsAvailable()
-    return executable("gorilla")
-endfunction
-
-function! SyntaxCheckers_gorilla_gorilla_GetLocList()
-    let makeprg = syntastic#makeprg#build({
+function! SyntaxCheckers_gorilla_gorilla_GetLocList() dict
+    let makeprg = self.makeprgBuild({
                 \ 'exe': 'gorilla',
                 \ 'args': '-p',
-                \ 'tail': '> /tmp/syntastic-gorilla-output',
-                \ 'subchecker': 'gorilla' })
+                \ 'tail': '> /tmp/syntastic-gorilla-output'})
     let errorformat =
         \ '%\\w%\\+%trror:\ %m\ at\ %f:%l:%c,%-G%.%#'
 
-    return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat })
+    return SyntasticMake({
+          \ 'makeprg': makeprg,
+          \ 'errorformat': errorformat,
+          \ 'subtype': 'Style',
+          \ 'postprocess': ['compressWhitespace', 'sort'] })
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
