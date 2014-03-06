@@ -58,7 +58,7 @@ endfunction
 
 " Compile the current file.
 command! -bang -bar -nargs=* GorillaMake
-\        call s:CoffeeMakeDeprecated(<q-bang>, <q-args>)
+\        call s:GorillaMakeDeprecated(<q-bang>, <q-args>)
 
 " Set `makeprg` on rename since we embed the filename in the setting.
 augroup GorillaUpdateMakePrg
