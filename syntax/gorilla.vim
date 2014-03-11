@@ -95,7 +95,7 @@ syn match   gorillaObject       /\<\u\w*\>/ display
 " A constant-like name in SCREAMING_CAPS
 syn match   gorillaConstant     /\<\u[A-Z0-9_]\+\>/ display
 " An @-variable
-syn match   gorillaSpecialIdent /@\<\%(\I\%(\i\|-\)*\)\?\>/ display
+syn match   gorillaSpecialIdent /@\{1,2}\<\%(\I\%(\i\|-\)*\)\?\>/ display
 " A $-variable
 syn match   gorillaSpecialIdent /\\\@<!\$\<\%(\I\%(\i\|-\)*\)\?\>/ display
 " A variable name

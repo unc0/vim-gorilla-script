@@ -211,6 +211,7 @@ let foo(x as String|Number, point as {x: Number, y: Number}) -> "abc"
 // generic type
 let x as Function<Number> = f()
 class MyClass<T>
+  @@prop := 123
   def constructor(@value as T) ->
 let my-str-obj = MyClass<String>("hello")
 
