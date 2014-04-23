@@ -14,21 +14,29 @@ if exists("g:loaded_syntastic_gorilla_gorilla_checker")
 endif
 let g:loaded_syntastic_gorilla_gorilla_checker=1
 
+let s:save_cpo = &cpo
+set cpo&vim
+
+function! SyntaxCheckers_gorilla_gorilla_IsAvailable() dict
+    return executable(self.getExec())
+endfunction
+
 function! SyntaxCheckers_gorilla_gorilla_GetLocList() dict
     let makeprg = self.makeprgBuild({
                 \ 'exe': 'gorilla',
-                \ 'args': '-p',
-                \ 'tail': '> /tmp/syntastic-gorilla-output'})
+                \ 'args_after': '-p'})
     let errorformat =
         \ '%\\w%\\+%trror:\ %m\ at\ %f:%l:%c,%-G%.%#'
 
     return SyntasticMake({
           \ 'makeprg': makeprg,
-          \ 'errorformat': errorformat,
-          \ 'subtype': 'Style',
-          \ 'postprocess': ['compressWhitespace', 'sort'] })
+          \ 'errorformat': errorformat})
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
     \ 'filetype': 'gorilla',
     \ 'name': 'gorilla'})
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
+
