@@ -14,9 +14,8 @@ directory and updates are just a `git pull` away.
    vimrc:
 
 ```vim
-runtime bundle/vim-unbundle/unbundle.vim
 syntax enable
-filetype plugin indent on
+runtime bundle/vim-unbundle/unbundle.vim
 ```
 
 [unbundle]: https://github.com/sunaku/vim-unbundle
